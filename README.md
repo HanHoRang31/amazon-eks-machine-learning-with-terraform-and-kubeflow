@@ -2,7 +2,7 @@
 
 This project defines a *prototypical* solution for  distributed training using [Kubeflow](https://www.kubeflow.org/docs/components/training/mpi/) on [Amazon Elastic Kubernetes Service (EKS)](https://docs.aws.amazon.com/whitepapers/latest/overview-deployment-options/amazon-elastic-kubernetes-service.html). The primary audience for this project is machine learning  researchers, developers, and engineers who need to pre-train or fine-tune large language models (LLMs) in the area of generative AI, or train deep neural networks (DNNs) in the area of computer vision.
 
-The solution offers a simple, uniform approach to distributed training in PyTorch and TensorFlow frameworks. It works with popular AI machine learning libraries, for example, [Hugging Face Accelerate](https://github.com/huggingface/accelerate), [PyTorch Lightning](https://github.com/Lightning-AI/pytorch-lightning), [DeepSpeed](https://github.com/microsoft/DeepSpeed]), [Megatron-DeepSpeed](https://github.com/microsoft/Megatron-DeepSpeed), [Ray Train](https://docs.ray.io/en/latest/train/train.html), [NeuronX Distributed](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/libraries/neuronx-distributed/index.html),among others. The solution works uniformly across various types of accelerators. 
+The solution offers a simple, uniform approach to distributed training in PyTorch and TensorFlow frameworks. It works with popular AI machine learning libraries, for example, [Hugging Face Accelerate](https://github.com/huggingface/accelerate), [PyTorch Lightning](https://github.com/Lightning-AI/pytorch-lightning), [DeepSpeed](https://github.com/microsoft/DeepSpeed]), [Megatron-DeepSpeed](https://github.com/microsoft/Megatron-DeepSpeed), [Ray Train](https://docs.ray.io/en/latest/train/train.html), among others. The solution works uniformly across various types of accelerators. 
 
 This project started as a companion to the [Mask R-CNN distributed training blog](https://aws.amazon.com/blogs/opensource/distributed-tensorflow-training-using-kubeflow-on-amazon-eks/), and that part of the project is documented in [this README](./tutorials/maskrcnn-blog/README.md). 
 
@@ -14,7 +14,7 @@ The deployed Kubeflow platform version is 1.8.0, and includes [Kubeflow Notebook
 
 The accelerator machines used for running the training jobs are automatically managed by [Karpenter](https://karpenter.sh/), which means, all machines used in data-preprocessing, and  training, are provisioned on-demand.
 
-To launch a data pre-processing or training job, all you need to do is install one of the pre-defined [machine-learning charts](./charts/machine-learning/) with a YAML file that defines inputs to the chart. Here is a [very quick example](./examples/accelerate/bert-glue-mrpc/README.md) that pre-trains Bert model on Glue MRPC dataset using Hugging Face Accelerate. For a heavy weight example, try the example for [Llama2 fine-tuning using PyTorch FSDP](./examples/accelerate/llama2/ft/fsdp/README.md).
+To launch a data pre-processing or training job, all you need to do is install one of the pre-defined [machine-learning charts](./charts/machine-learning/) with a YAML file that defines inputs to the chart. Here is a [very quick example](./examples/accelerate/bert-glue-mrpc/README.md) that pre-trains Bert model on Glue MRPC dataset using Hugging Face Accelerate. 
 
 ## What is in the YAML file
 
@@ -27,7 +27,6 @@ The YAML file is a [Helm values](https://helm.sh/docs/chart_template_guide/value
 * There is an optional `post-script` section for executing post training script.
 * The training launch command and arguments are defined in the `train` field, and the data processing launch command and arguments are defined in the `process` field.
 * The `pvc` field specifies the persistent volumes and their mount paths. EFS and Fsx for Lustre persistent volumes are available by default at `/efs` and `/fsx` mount paths, respectively, but these mount paths can be changed.
-* The `ebs` field specifies optional [Amazon EBS](https://aws.amazon.com/ebs/) volume storage capacity and mount path. By default, no EBS volume is attached.
 
 ## Prerequisites
 

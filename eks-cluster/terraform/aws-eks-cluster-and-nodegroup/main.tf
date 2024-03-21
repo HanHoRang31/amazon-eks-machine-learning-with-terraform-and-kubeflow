@@ -5,8 +5,8 @@ provider "aws" {
 }
 
 provider "aws" {
-  region                   = "us-east-1"
-  alias                    = "virginia"
+  region                   = "ap-northeast-2"
+  alias                    = "seoul"
   shared_credentials_files = [var.credentials]
   profile                  = var.profile
 }
@@ -260,7 +260,7 @@ resource "aws_fsx_lustre_file_system" "fs" {
 
   storage_capacity = var.fsx_storage_capacity
   subnet_ids       = [aws_subnet.private[0].id]
-  deployment_type  = "SCRATCH_2"
+  deployment_type  = "SCRATCH_2" # 
 
   security_group_ids = [aws_security_group.fsx_lustre_sg.id]
 
@@ -276,7 +276,7 @@ resource "aws_fsx_lustre_file_system" "fs" {
 resource "aws_fsx_data_repository_association" "this" {
   file_system_id       = aws_fsx_lustre_file_system.fs.id
   data_repository_path = var.import_path
-  file_system_path     = "/"
+  file_system_path     = "/ns"
   batch_import_meta_data_on_create = true
 
   s3 {
@@ -396,6 +396,14 @@ module "eks_blueprints_addons" {
     aws-ebs-csi-driver = {
       addon_version              = "v1.26.0-eksbuild.1"
       service_account_role_arn = module.ebs_csi_driver_irsa.iam_role_arn
+    },
+    vpc-cni = {
+      configuration_values = jsonencode({
+        env = {
+          MINIMUM_IP_TARGET  = "30",
+          MAX_ENI     = "1"
+        }
+      })
     }
   }
 
@@ -746,6 +754,7 @@ resource "aws_launch_template" "this" {
   key_name = var.key_pair != "" ? var.key_pair : null
   
   user_data = filebase64("../../user-data.txt")
+
 }
 
 resource "aws_eks_node_group" "this" {
@@ -757,6 +766,7 @@ resource "aws_eks_node_group" "this" {
   subnet_ids      = aws_subnet.private.*.id
   ami_type        = "AL2_x86_64_GPU"
   capacity_type = var.capacity_type
+
 
  launch_template {
     id = aws_launch_template.this[count.index].id
@@ -1218,8 +1228,7 @@ module "profiles-controller-irsa" {
 resource "helm_release" "ebs-sc" {
   name       = "ebs-sc"
   chart      = "${var.local_helm_repo}/ebs-sc"
-  version    = "1.0.1"
-  wait       = "false"
+  version    = "1.0.0"
 
   depends_on = [ module.eks_blueprints_addons ]
 }

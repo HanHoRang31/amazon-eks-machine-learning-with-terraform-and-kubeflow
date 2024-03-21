@@ -78,13 +78,13 @@ variable "efs_throughput_mode" {
 variable "import_path" {
   description = "fsx for lustre s3 import path"
   type = string
-  default = ""
+  default = "/ns1"
 }
 
 variable "key_pair" {
   description = "Name of EC2 key pair used to launch EKS cluster worker node EC2 instances"
   type = string
-  default = ""
+  default = "keypair"
 }
 
 variable "node_volume_size" {
@@ -101,7 +101,7 @@ variable "node_group_desired" {
 
 variable "node_group_max" {
     description = "Node group maximum size"
-    default = 32
+    default = 8
     type = number
 }
 
@@ -175,21 +175,15 @@ variable "system_instances" {
   description = "List of instance types for system nodes."
   type = list(string)
   default = [
-    "t3a.large",
     "t3a.xlarge",
     "t3a.2xlarge",
-    "m5.large", 
     "m5.xlarge", 
     "m5.2xlarge", 
     "m5.4xlarge", 
     "m5a.large", 
     "m5a.xlarge", 
     "m5a.2xlarge", 
-    "m5a.4xlarge", 
-    "m7a.large", 
-    "m7a.xlarge", 
-    "m7a.2xlarge",
-    "m7a.4xlarge"
+    "m5a.4xlarge"
   ]
 }
 
@@ -302,7 +296,7 @@ variable "kubeflow_platform_enabled" {
 
 variable "system_group_desired" {
     description = "System group desired size"
-    default = 4
+    default = 3
     type = number
 }
 
